@@ -15,11 +15,9 @@ public class CheckoutHandler {
     private LocalDate deliveryWindowStart;
     private LocalDate deliveryWindowEnd;
 
-    public double calculateTotal(List<Item> items, String voucher, String membership, String address){
-
+    private double sumItemPrices (List<Item> items) {
         double baseTotal = 0;
 
-        // sum up the prices
         List<Double> prices = new ArrayList<>();
         for(Item item : items){
             prices.add(item.price());
@@ -28,26 +26,54 @@ public class CheckoutHandler {
         for(double price : prices){
             baseTotal = baseTotal + price;
         }
+        return baseTotal;
+    }
 
-        // check if voucher is valid
-        if(voucher.equals("GIMME_DISCOUNT") || voucher.equals("CHEAPER_PLEASE")){
-             baseTotal = BigDecimal.valueOf(baseTotal * 0.95).setScale(2, RoundingMode.HALF_EVEN).doubleValue();
+    public double applyVoucher(String voucher, double price){
+        if(isValidVoucher(voucher)){
+            price = BigDecimal.valueOf(price * 0.95).setScale(2, RoundingMode.HALF_EVEN).doubleValue();
         } else {
             System.out.println("Voucher invalid");
         }
 
-        // handle delivery fee
-        if(membership.equalsIgnoreCase("GOLD")){
+        return price;
+    }
+
+    public boolean isValidVoucher(String voucher) {
+        return voucher.equals("GIMME_DISCOUNT") || voucher.equals("CHEAPER_PLEASE");
+    }
+
+    public boolean isEligibleForFreeDelivery(String membership) {
+        return membership.equalsIgnoreCase("GOLD");
+    }
+
+    public boolean isUsAddress(String address) {
+        return Pattern.matches(".*US.*", address);
+    }
+
+    public double addDeliveryFee(String membership, double total, String address) {
+        if(isEligibleForFreeDelivery(membership)){
             // do nothing
         } else {
-            if(Pattern.matches(".*US.*", address)){
+            if(isUsAddress(address)){
                 System.out.println("Adding flat delivery fee of 5 USD");
-                baseTotal = baseTotal + 5;
+                total = total + 5;
             } else {
                 System.out.println("Adding flat global delivery fee of 10 USD");
-                baseTotal = baseTotal + 10;
+                total = total + 10;
             }
         }
+
+        return total;
+    }
+
+    public double calculateTotal(List<Item> items, String voucher, String membership, String address){
+        double baseTotal = sumItemPrices(items);
+
+        baseTotal = applyVoucher(voucher,baseTotal);
+
+        baseTotal = addDeliveryFee(membership, baseTotal, address);
+
         return baseTotal;
     }
 
