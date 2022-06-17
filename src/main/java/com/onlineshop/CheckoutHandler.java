@@ -1,6 +1,7 @@
 package com.onlineshop;
 
 
+import com.onlineshop.entities.Customer;
 import com.onlineshop.items.Item;
 
 import java.math.BigDecimal;
@@ -45,11 +46,11 @@ public class CheckoutHandler {
         return address.contains("US");
     }
 
-    public double addDeliveryFee(String membership, double total, String address) {
-        if(isEligibleForFreeDelivery(membership)){
+    public double addDeliveryFee(Customer customer, double total) {
+        if(isEligibleForFreeDelivery(customer.getMembership())){
             // do nothing
         } else {
-            if(isUsAddress(address)){
+            if(isUsAddress(customer.getAddress())){
                 System.out.println("Adding flat delivery fee of 5 USD");
                 total = total + 5;
             } else {
@@ -61,12 +62,12 @@ public class CheckoutHandler {
         return total;
     }
 
-    public double calculateTotal(List<Item> items, String voucher, String membership, String address){
+    public double calculateTotal(List<Item> items, String voucher, Customer customer){
         double baseTotal = sumItemPrices(items);
 
         baseTotal = applyVoucher(voucher,baseTotal);
 
-        baseTotal = addDeliveryFee(membership, baseTotal, address);
+        baseTotal = addDeliveryFee(customer, baseTotal);
 
         return baseTotal;
     }

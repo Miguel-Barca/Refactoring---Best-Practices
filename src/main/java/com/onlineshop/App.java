@@ -27,7 +27,7 @@ public class App {
 
         CheckoutHandler checkout = new CheckoutHandler();
         // calculate total
-        double total1 = checkout.calculateTotal(shoppingList, "DummyVoucher", membership, address);
+        double total1 = checkout.calculateTotal(shoppingList, "DummyVoucher", customer1);
         System.out.println("Total price for goods: " + total1);
 
 
