@@ -6,4 +6,9 @@ public class Milk extends Item {
     public double price() {
         return 1;
     }
+
+    @Override
+    public boolean isAgeRestrictedItem() {
+        return false;
+    }
 }

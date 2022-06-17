@@ -1,7 +1,9 @@
 package com.onlineshop.handlers;
 
 
+import com.onlineshop.entities.Address;
 import com.onlineshop.entities.Customer;
+import com.onlineshop.entities.Membership;
 
 public class DeliveryManager {
 
@@ -21,12 +23,12 @@ public class DeliveryManager {
         return total;
     }
 
-    private boolean isEligibleForFreeDelivery(String membership) {
-        return membership.equalsIgnoreCase("GOLD");
+    private boolean isEligibleForFreeDelivery(Membership membership) {
+        return membership.name().equalsIgnoreCase("GOLD");
     }
 
-    private boolean isUsAddress(String address) {
-        return address.contains("US");
+    private boolean isUsAddress(Address address) {
+        return address.getCountry().toString().contains("US");
     }
 
 

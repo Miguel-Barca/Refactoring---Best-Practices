@@ -6,4 +6,9 @@ public class Wine extends Item {
     public double price() {
         return 3;
     }
+
+    @Override
+    public boolean isAgeRestrictedItem() {
+        return true;
+    }
 }
