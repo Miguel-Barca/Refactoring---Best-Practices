@@ -16,17 +16,12 @@ public class CheckoutHandler {
     private LocalDate deliveryWindowEnd;
 
     private double sumItemPrices (List<Item> items) {
-        double baseTotal = 0;
+        double sum = 0;
 
-        List<Double> prices = new ArrayList<>();
-        for(Item item : items){
-            prices.add(item.price());
+        for(Item item : items) {
+            sum = sum + item.price();
         }
-
-        for(double price : prices){
-            baseTotal = baseTotal + price;
-        }
-        return baseTotal;
+        return sum;
     }
 
     public double applyVoucher(String voucher, double price){
@@ -35,7 +30,6 @@ public class CheckoutHandler {
         } else {
             System.out.println("Voucher invalid");
         }
-
         return price;
     }
 
@@ -48,7 +42,7 @@ public class CheckoutHandler {
     }
 
     public boolean isUsAddress(String address) {
-        return Pattern.matches(".*US.*", address);
+        return address.contains("US");
     }
 
     public double addDeliveryFee(String membership, double total, String address) {
